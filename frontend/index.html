@@ -550,19 +550,32 @@
 <script>
     class ApiService {
         constructor() {
-            this.baseUrl = 'https://projeto-precificacao-wernersaboia.replit.dev/api';
+            this.baseUrl = 'https://unpenetrated-overbravely-janae.ngrok-free.dev/api';
+            this.headers = {
+                'ngrok-skip-browser-warning': '69420',
+                'Content-Type': 'application/json'
+            };
         }
 
         async listarProdutos() {
-            const response = await fetch(`${this.baseUrl}/produtos`);
-            if (!response.ok) throw new Error('Erro ao listar produtos');
-            return response.json();
+            try {
+                const response = await fetch(`${this.baseUrl}/produtos`, {
+                    headers: this.headers
+                });
+                if (!response.ok) throw new Error('Erro ao listar produtos');
+                const data = await response.json();
+                console.log('Produtos recebidos:', data);
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                console.error('Erro na API listarProdutos:', error);
+                return [];
+            }
         }
 
         async criar(produto) {
             const response = await fetch(`${this.baseUrl}/produtos`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: this.headers,
                 body: JSON.stringify(produto),
             });
             if (!response.ok) throw new Error('Erro ao criar produto');
@@ -572,24 +585,38 @@
         async deletar(id) {
             const response = await fetch(`${this.baseUrl}/produtos/${id}`, {
                 method: 'DELETE',
+                headers: this.headers
             });
             if (!response.ok) throw new Error('Erro ao deletar produto');
         }
 
         async obterResumo() {
-            const response = await fetch(`${this.baseUrl}/produtos/resumo/consolidado`);
-            if (!response.ok) throw new Error('Erro ao obter resumo');
-            return response.json();
+            try {
+                const response = await fetch(`${this.baseUrl}/produtos/resumo/consolidado`, {
+                    headers: this.headers
+                });
+                if (!response.ok) throw new Error('Erro ao obter resumo');
+                const data = await response.json();
+                console.log('Resumo recebido:', data);
+                return data;
+            } catch (error) {
+                console.error('Erro na API obterResumo:', error);
+                return null;
+            }
         }
 
         async exportarCSV() {
-            const response = await fetch(`${this.baseUrl}/relatorio/csv`);
+            const response = await fetch(`${this.baseUrl}/relatorio/csv`, {
+                headers: this.headers
+            });
             if (!response.ok) throw new Error('Erro ao exportar CSV');
             return response.text();
         }
 
         async exportarTXT() {
-            const response = await fetch(`${this.baseUrl}/relatorio/txt`);
+            const response = await fetch(`${this.baseUrl}/relatorio/txt`, {
+                headers: this.headers
+            });
             if (!response.ok) throw new Error('Erro ao exportar TXT');
             return response.text();
         }
@@ -626,18 +653,25 @@
             };
 
             try {
+                console.log('Criando produto:', produto);
                 await this.apiService.criar(produto);
+                console.log('Produto criado com sucesso!');
                 form.reset();
+                console.log('Recarregando produtos...');
                 await this.carregarProdutos();
+                console.log('Produtos recarregados!');
                 this.mostrarAlerta('✅ Produto criado com sucesso!', 'success');
             } catch (error) {
+                console.error('Erro ao criar:', error);
                 this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
             }
         }
 
         async carregarProdutos() {
             try {
+                console.log('Carregando produtos...');
                 this.produtos = await this.apiService.listarProdutos();
+                console.log('Produtos carregados:', this.produtos);
                 this.renderizarTabela();
                 await this.atualizarDashboard();
                 await this.criarGraficos();
@@ -753,7 +787,7 @@
             try {
                 const resumo = await this.apiService.obterResumo();
 
-                if (resumo.status === 'Nenhum produto cadastrado') {
+                if (!resumo || resumo.status === 'Nenhum produto cadastrado') {
                     document.getElementById('dashboardContent').style.display = 'none';
                     document.getElementById('dashboardVazio').style.display = 'block';
                     return;
@@ -783,6 +817,8 @@
             if (this.produtos.length === 0) return;
 
             const resumo = await this.apiService.obterResumo();
+            if (!resumo) return;
+
             this.criarGraficoReceitaLucro(resumo);
             this.criarGraficoTopProdutos();
             this.criarGraficoCategorias();

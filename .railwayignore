@@ -1,0 +1,6 @@
+.git
+.idea
+node_modules
+*.class
+target/classes
+backend/target/classes

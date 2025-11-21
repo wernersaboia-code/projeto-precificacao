@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd backend && mvn clean package -DskipTests",
+  "installCommand": "apt-get update && apt-get install -y maven openjdk-25-jdk",
+  "outputDirectory": "backend/target",
+  "functions": {
+    "api/**": {
+      "runtime": "java"
+    }
+  }
+}

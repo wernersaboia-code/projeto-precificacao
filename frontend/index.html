@@ -550,9 +550,8 @@
     <script>
         class ApiService {
             constructor() {
-                this.baseUrl = 'https://unpenetrated-overbravely-janae.ngrok-free.dev/api';
+                this.baseUrl = window.location.origin + '/api';
                 this.headers = {
-                    'ngrok-skip-browser-warning': '69420',
                     'Content-Type': 'application/json'
                 };
             }

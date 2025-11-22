@@ -4,15 +4,13 @@ WORKDIR /app
 
 # Copy pom.xml first (for better cache)
 COPY pom.xml .
-# Download dependencies
 RUN mvn dependency:go-offline -B
 
 # Copy source code
 COPY src ./src
 
-# Build application with Lombok support
-RUN mvn clean compile -B
-RUN mvn package -DskipTests -B
+# Build application
+RUN mvn clean package -DskipTests -B
 
 # Runtime stage
 FROM eclipse-temurin:21-jre
@@ -24,9 +22,5 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose port
 EXPOSE 8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
-
-# Run application
-ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+# Run application with PROD profile
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=prod -Dserver.port=${PORT:-8080} -jar app.jar"]

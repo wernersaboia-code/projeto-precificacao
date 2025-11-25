@@ -145,6 +145,7 @@
 
         .table-wrapper {
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
@@ -152,6 +153,7 @@
             border-collapse: collapse;
             margin-top: 20px;
             font-size: 0.9rem;
+            min-width: 800px;
         }
 
         th {
@@ -372,354 +374,561 @@
             background: #f8d7da;
             color: #721c24;
         }
+
+        /* MOBILE STYLES - CARDS PARA PRODUTOS */
+        .mobile-products {
+            display: none;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .product-category {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        .product-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 3px solid #667eea;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .product-actions button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* MEDIA QUERIES PARA MOBILE */
+        @media (max-width: 768px) {
+            .table-wrapper {
+                display: none;
+            }
+
+            .mobile-products {
+                display: block;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .card {
+                padding: 20px 15px;
+            }
+
+            .content {
+                gap: 15px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            input, select {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .tabs {
+                gap: 5px;
+            }
+
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+                flex: 1;
+                min-width: 120px;
+            }
+
+            .details-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .detail-item .value {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-details {
+                grid-template-columns: 1fr;
+            }
+
+            .details-row {
+                grid-template-columns: 1fr;
+            }
+
+            .product-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .chart-container {
+                height: 300px;
+                padding: 15px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>💰 Precificação Simples</h1>
-            <p>Sistema inteligente de cálculo de preços</p>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>💰 Precificação Simples</h1>
+        <p>Sistema inteligente de cálculo de preços</p>
+    </div>
 
-        <div class="tabs">
-            <button class="tab-button active" onclick="app.mudarAba('produtos')">📦 Produtos</button>
-            <button class="tab-button" onclick="app.mudarAba('dashboard')">📊 Dashboard</button>
-            <button class="tab-button" onclick="app.mudarAba('analytics')">📈 Analytics</button>
-        </div>
+    <div class="tabs">
+        <button class="tab-button active" onclick="app.mudarAba('produtos')">📦 Produtos</button>
+        <button class="tab-button" onclick="app.mudarAba('dashboard')">📊 Dashboard</button>
+        <button class="tab-button" onclick="app.mudarAba('analytics')">📈 Analytics</button>
+    </div>
 
-        <!-- ABA 1: PRODUTOS -->
-        <div id="produtos" class="tab-content active">
-            <div class="content">
-                <div class="card">
-                    <h2>Adicionar Produto</h2>
-                    <div id="alert" class="alert"></div>
-                    <form id="formProduto">
-                        <div class="form-group">
-                            <label for="custoFixoMensal">Custo Fixo Mensal (R$):</label>
-                            <input type="number" id="custoFixoMensal" name="custoFixoMensal" step="0.01" value="250.00" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="nome">Nome do Produto:</label>
-                            <input type="text" id="nome" name="nome" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="categoria">Categoria:</label>
-                            <input type="text" id="categoria" name="categoria" placeholder="Ex: Perfume, Relógio" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="precoCusto">Preço de Custo (R$):</label>
-                            <input type="number" id="precoCusto" name="precoCusto" step="0.01" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="quantidadeEstimada">Quantidade Estimada:</label>
-                            <input type="number" id="quantidadeEstimada" name="quantidadeEstimada" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="margemDesejada">Margem Desejada (%):</label>
-                            <input type="number" id="margemDesejada" name="margemDesejada" step="0.01" value="26" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="impostosCustosVariaveis">Impostos + Custos Variáveis (%):</label>
-                            <input type="number" id="impostosCustosVariaveis" name="impostosCustosVariaveis" step="0.01" value="15" required>
-                        </div>
-
-                        <button type="submit">➕ Adicionar Produto</button>
-                    </form>
-                </div>
-
-                <div class="card">
-                    <h2>Produtos Cadastrados</h2>
-                    <div class="table-wrapper">
-                        <table id="tabelaProdutos">
-                            <thead>
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Categoria</th>
-                                    <th>Qtd Est.</th>
-                                    <th>Preço Compra</th>
-                                    <th>Custo Fixo/Un</th>
-                                    <th>Custo Total Base</th>
-                                    <th>Preço Venda Ideal</th>
-                                    <th>Margem Contribuição</th>
-                                    <th>Lucro Bruto/Un</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA 2: DASHBOARD -->
-        <div id="dashboard" class="tab-content">
+    <!-- ABA 1: PRODUTOS -->
+    <div id="produtos" class="tab-content active">
+        <div class="content">
             <div class="card">
-                <h2>📊 Dashboard Geral</h2>
-                <div id="dashboardContent" style="display: none;">
-                    <div class="dashboard-grid">
-                        <div class="dashboard-card">
-                            <h3>Custo Fixo Mensal</h3>
-                            <div class="value" id="dashCustoFixo">R$ 0,00</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Receita Total Mensal</h3>
-                            <div class="value" id="dashReceita">R$ 0,00</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Custo Total de Compra</h3>
-                            <div class="value" id="dashCustoCompra">R$ 0,00</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Margem de Contribuição Total</h3>
-                            <div class="value" id="dashMargemTotal">R$ 0,00</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Venda Estimada Mensal</h3>
-                            <div class="value" id="dashVendas">0</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Margem Média (%)</h3>
-                            <div class="value" id="dashMargemMedia">0%</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Lucro Bruto Total</h3>
-                            <div class="value" id="dashLucro">R$ 0,00</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>Ponto de Equilíbrio (R$)</h3>
-                            <div class="value" id="dashPontoEquilibrio">R$ 0,00</div>
-                        </div>
-                        <div class="dashboard-card">
-                            <h3>ROI Geral (%)</h3>
-                            <div class="value" id="dashROI">0%</div>
-                        </div>
-                        <div class="dashboard-card" style="grid-column: 1 / -1;">
-                            <h3>Status</h3>
-                            <div class="value status" id="dashStatus">-</div>
-                        </div>
+                <h2>Adicionar Produto</h2>
+                <div id="alert" class="alert"></div>
+                <form id="formProduto">
+                    <div class="form-group">
+                        <label for="custoFixoMensal">Custo Fixo Mensal (R$):</label>
+                        <input type="number" id="custoFixoMensal" name="custoFixoMensal" step="0.01" value="250.00" required>
                     </div>
-                </div>
-                <div id="dashboardVazio" class="no-data">
-                    Nenhum produto cadastrado. Adicione produtos na aba "Produtos" para ver o dashboard.
-                </div>
+
+                    <div class="form-group">
+                        <label for="nome">Nome do Produto:</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoria:</label>
+                        <input type="text" id="categoria" name="categoria" placeholder="Ex: Perfume, Relógio" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precoCusto">Preço de Custo (R$):</label>
+                        <input type="number" id="precoCusto" name="precoCusto" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantidadeEstimada">Quantidade Estimada:</label>
+                        <input type="number" id="quantidadeEstimada" name="quantidadeEstimada" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="margemDesejada">Margem Desejada (%):</label>
+                        <input type="number" id="margemDesejada" name="margemDesejada" step="0.01" value="26" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="impostosCustosVariaveis">Impostos + Custos Variáveis (%):</label>
+                        <input type="number" id="impostosCustosVariaveis" name="impostosCustosVariaveis" step="0.01" value="15" required>
+                    </div>
+
+                    <button type="submit">➕ Adicionar Produto</button>
+                </form>
             </div>
-        </div>
 
-        <!-- ABA 3: ANALYTICS -->
-        <div id="analytics" class="tab-content">
             <div class="card">
-                <h2>📈 Analytics & Relatórios</h2>
-                
-                <div class="export-buttons">
-                    <button onclick="app.exportarCSV()">💾 Exportar CSV</button>
-                    <button class="pdf" onclick="app.exportarTXT()">📄 Exportar Relatório</button>
+                <h2>Produtos Cadastrados</h2>
+                <div class="table-wrapper">
+                    <table id="tabelaProdutos">
+                        <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Qtd Est.</th>
+                            <th>Preço Compra</th>
+                            <th>Custo Fixo/Un</th>
+                            <th>Custo Total Base</th>
+                            <th>Preço Venda Ideal</th>
+                            <th>Margem Contribuição</th>
+                            <th>Lucro Bruto/Un</th>
+                            <th>Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px;">Receita vs Lucro (Mensal)</h3>
-                        <canvas id="chartReceitaLucro"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px;">Top 5 Produtos (Lucro)</h3>
-                        <canvas id="chartTopProdutos"></canvas>
-                    </div>
-                </div>
-
-                <div class="chart-row">
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px;">Distribuição por Categoria</h3>
-                        <canvas id="chartCategorias"></canvas>
-                    </div>
-                    <div class="chart-container">
-                        <h3 style="margin-bottom: 20px;">Resumo Financeiro</h3>
-                        <div id="resumoFinanceiro" class="resumo-financeiro"></div>
-                    </div>
-                </div>
+                <div class="mobile-products"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        class ApiService {
-            constructor() {
-                this.baseUrl = 'https://projeto-precificacao-ulbf.onrender.com/api';
-                this.headers = {
-                    'Content-Type': 'application/json'
-                };
-            }
+    <!-- ABA 2: DASHBOARD -->
+    <div id="dashboard" class="tab-content">
+        <div class="card">
+            <h2>📊 Dashboard Geral</h2>
+            <div id="dashboardContent" style="display: none;">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Custo Fixo Mensal</h3>
+                        <div class="value" id="dashCustoFixo">R$ 0,00</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Receita Total Mensal</h3>
+                        <div class="value" id="dashReceita">R$ 0,00</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Custo Total de Compra</h3>
+                        <div class="value" id="dashCustoCompra">R$ 0,00</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Margem de Contribuição Total</h3>
+                        <div class="value" id="dashMargemTotal">R$ 0,00</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Venda Estimada Mensal</h3>
+                        <div class="value" id="dashVendas">0</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Margem Média (%)</h3>
+                        <div class="value" id="dashMargemMedia">0%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Lucro Bruto Total</h3>
+                        <div class="value" id="dashLucro">R$ 0,00</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Ponto de Equilíbrio (R$)</h3>
+                        <div class="value" id="dashPontoEquilibrio">R$ 0,00</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>ROI Geral (%)</h3>
+                        <div class="value" id="dashROI">0%</div>
+                    </div>
+                    <div class="dashboard-card" style="grid-column: 1 / -1;">
+                        <h3>Status</h3>
+                        <div class="value status" id="dashStatus">-</div>
+                    </div>
+                </div>
+            </div>
+            <div id="dashboardVazio" class="no-data">
+                Nenhum produto cadastrado. Adicione produtos na aba "Produtos" para ver o dashboard.
+            </div>
+        </div>
+    </div>
 
-            async listarProdutos() {
-                try {
-                    const response = await fetch(`${this.baseUrl}/produtos`, {
-                        headers: this.headers
-                    });
-                    if (!response.ok) throw new Error('Erro ao listar produtos');
-                    const data = await response.json();
-                    console.log('Produtos recebidos:', data);
-                    return Array.isArray(data) ? data : [];
-                } catch (error) {
-                    console.error('Erro na API listarProdutos:', error);
-                    return [];
-                }
-            }
+    <!-- ABA 3: ANALYTICS -->
+    <div id="analytics" class="tab-content">
+        <div class="card">
+            <h2>📈 Analytics & Relatórios</h2>
 
-            async criar(produto) {
+            <div class="export-buttons">
+                <button onclick="app.exportarCSV()">💾 Exportar CSV</button>
+                <button class="pdf" onclick="app.exportarTXT()">📄 Exportar Relatório</button>
+            </div>
+
+            <div class="chart-row">
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">Receita vs Lucro (Mensal)</h3>
+                    <canvas id="chartReceitaLucro"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">Top 5 Produtos (Lucro)</h3>
+                    <canvas id="chartTopProdutos"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-row">
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">Distribuição por Categoria</h3>
+                    <canvas id="chartCategorias"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">Resumo Financeiro</h3>
+                    <div id="resumoFinanceiro" class="resumo-financeiro"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    class ApiService {
+        constructor() {
+            this.baseUrl = 'https://projeto-precificacao-ulbf.onrender.com/api';
+            this.headers = {
+                'Content-Type': 'application/json'
+            };
+        }
+
+        async listarProdutos() {
+            try {
                 const response = await fetch(`${this.baseUrl}/produtos`, {
-                    method: 'POST',
-                    headers: this.headers,
-                    body: JSON.stringify(produto),
-                });
-                if (!response.ok) throw new Error('Erro ao criar produto');
-                return response.json();
-            }
-
-            async deletar(id) {
-                const response = await fetch(`${this.baseUrl}/produtos/${id}`, {
-                    method: 'DELETE',
                     headers: this.headers
                 });
-                if (!response.ok) throw new Error('Erro ao deletar produto');
-            }
-
-            async obterResumo() {
-                try {
-                    const response = await fetch(`${this.baseUrl}/produtos/resumo/consolidado`, {
-                        headers: this.headers
-                    });
-                    if (!response.ok) throw new Error('Erro ao obter resumo');
-                    const data = await response.json();
-                    console.log('Resumo recebido:', data);
-                    return data;
-                } catch (error) {
-                    console.error('Erro na API obterResumo:', error);
-                    return null;
-                }
-            }
-
-            async exportarCSV() {
-                const response = await fetch(`${this.baseUrl}/relatorio/csv`, {
-                    headers: this.headers
-                });
-                if (!response.ok) throw new Error('Erro ao exportar CSV');
-                return response.text();
-            }
-
-            async exportarTXT() {
-                const response = await fetch(`${this.baseUrl}/relatorio/txt`, {
-                    headers: this.headers
-                });
-                if (!response.ok) throw new Error('Erro ao exportar TXT');
-                return response.text();
+                if (!response.ok) throw new Error('Erro ao listar produtos');
+                const data = await response.json();
+                console.log('Produtos recebidos:', data);
+                return Array.isArray(data) ? data : [];
+            } catch (error) {
+                console.error('Erro na API listarProdutos:', error);
+                return [];
             }
         }
 
-        class App {
-            constructor() {
-                this.apiService = new ApiService();
-                this.produtos = [];
-                this.charts = {
-                    receitaLucro: null,
-                    topProdutos: null,
-                    categorias: null
-                };
-                this.inicializarEventos();
-                this.carregarProdutos();
-                setInterval(() => this.atualizarDashboard(), 3000);
-            }
+        async criar(produto) {
+            const response = await fetch(`${this.baseUrl}/produtos`, {
+                method: 'POST',
+                headers: this.headers,
+                body: JSON.stringify(produto),
+            });
+            if (!response.ok) throw new Error('Erro ao criar produto');
+            return response.json();
+        }
 
-            inicializarEventos() {
-                const form = document.getElementById('formProduto');
-                form.addEventListener('submit', (e) => this.handleSubmit(e));
-            }
+        async deletar(id) {
+            const response = await fetch(`${this.baseUrl}/produtos/${id}`, {
+                method: 'DELETE',
+                headers: this.headers
+            });
+            if (!response.ok) throw new Error('Erro ao deletar produto');
+        }
 
-            async handleSubmit(event) {
-                event.preventDefault();
-
-                const form = event.target;
-                const formData = new FormData(form);
-
-                const produto = {
-                    nome: formData.get('nome'),
-                    categoria: formData.get('categoria'),
-                    precoCusto: parseFloat(formData.get('precoCusto')),
-                    quantidadeEstimada: parseInt(formData.get('quantidadeEstimada')),
-                    margemDesejada: parseFloat(formData.get('margemDesejada')) / 100,
-                    impostosCustosVariaveis: parseFloat(formData.get('impostosCustosVariaveis')) / 100,
-                    custoFixoMensal: parseFloat(formData.get('custoFixoMensal')),
-                };
-
-                try {
-                    console.log('Criando produto:', produto);
-                    await this.apiService.criar(produto);
-                    console.log('Produto criado com sucesso!');
-                    form.reset();
-                    console.log('Recarregando produtos...');
-                    await this.carregarProdutos();
-                    console.log('Produtos recarregados!');
-                    this.mostrarAlerta('✅ Produto criado com sucesso!', 'success');
-                } catch (error) {
-                    console.error('Erro ao criar:', error);
-                    this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
-                }
-            }
-
-            async carregarProdutos() {
-                try {
-                    console.log('Carregando produtos...');
-                    this.produtos = await this.apiService.listarProdutos();
-                    console.log('Produtos carregados:', this.produtos);
-                    this.renderizarTabela();
-                    await this.atualizarDashboard();
-                    await this.criarGraficos();
-                } catch (error) {
-                    console.error('Erro ao carregar produtos:', error);
-                }
-            }
-
-            renderizarTabela() {
-                const tbody = document.querySelector('#tabelaProdutos tbody');
-                tbody.innerHTML = '';
-
-                if (this.produtos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="10" class="no-data">Nenhum produto cadastrado</td></tr>';
-                    return;
-                }
-
-                this.produtos.forEach((produto) => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${produto.nome}</td>
-                        <td>${produto.categoria}</td>
-                        <td>${produto.quantidadeEstimada}</td>
-                        <td>R$ ${produto.precoCusto.toFixed(2)}</td>
-                        <td>R$ ${(produto.custoFixoPorUnidade || 0).toFixed(2)}</td>
-                        <td>R$ ${(produto.custoTotalBase || 0).toFixed(2)}</td>
-                        <td>R$ ${(produto.precoIdeal || 0).toFixed(2)}</td>
-                        <td>R$ ${(produto.margemBruta || 0).toFixed(2)}</td>
-                        <td>R$ ${(produto.lucroBrutoPorUnidade || 0).toFixed(2)}</td>
-                        <td>
-                            <button class="btn-expand" onclick="app.expandirDetalhes(${produto.id}, this)">Detalhes</button>
-                            <button class="btn-delete" onclick="app.deletarProduto(${produto.id})">Deletar</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
+        async obterResumo() {
+            try {
+                const response = await fetch(`${this.baseUrl}/produtos/resumo/consolidado`, {
+                    headers: this.headers
                 });
+                if (!response.ok) throw new Error('Erro ao obter resumo');
+                const data = await response.json();
+                console.log('Resumo recebido:', data);
+                return data;
+            } catch (error) {
+                console.error('Erro na API obterResumo:', error);
+                return null;
+            }
+        }
+
+        async exportarCSV() {
+            const response = await fetch(`${this.baseUrl}/relatorio/csv`, {
+                headers: this.headers
+            });
+            if (!response.ok) throw new Error('Erro ao exportar CSV');
+            return response.text();
+        }
+
+        async exportarTXT() {
+            const response = await fetch(`${this.baseUrl}/relatorio/txt`, {
+                headers: this.headers
+            });
+            if (!response.ok) throw new Error('Erro ao exportar TXT');
+            return response.text();
+        }
+    }
+
+    class App {
+        constructor() {
+            this.apiService = new ApiService();
+            this.produtos = [];
+            this.charts = {
+                receitaLucro: null,
+                topProdutos: null,
+                categorias: null
+            };
+            this.inicializarEventos();
+            this.carregarProdutos();
+            setInterval(() => this.atualizarDashboard(), 3000);
+        }
+
+        inicializarEventos() {
+            const form = document.getElementById('formProduto');
+            form.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+
+        async handleSubmit(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            const produto = {
+                nome: formData.get('nome'),
+                categoria: formData.get('categoria'),
+                precoCusto: parseFloat(formData.get('precoCusto')),
+                quantidadeEstimada: parseInt(formData.get('quantidadeEstimada')),
+                margemDesejada: parseFloat(formData.get('margemDesejada')) / 100,
+                impostosCustosVariaveis: parseFloat(formData.get('impostosCustosVariaveis')) / 100,
+                custoFixoMensal: parseFloat(formData.get('custoFixoMensal')),
+            };
+
+            try {
+                console.log('Criando produto:', produto);
+                await this.apiService.criar(produto);
+                console.log('Produto criado com sucesso!');
+                form.reset();
+                console.log('Recarregando produtos...');
+                await this.carregarProdutos();
+                console.log('Produtos recarregados!');
+                this.mostrarAlerta('✅ Produto criado com sucesso!', 'success');
+            } catch (error) {
+                console.error('Erro ao criar:', error);
+                this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async carregarProdutos() {
+            try {
+                console.log('Carregando produtos...');
+                this.produtos = await this.apiService.listarProdutos();
+                console.log('Produtos carregados:', this.produtos);
+                this.renderizarTabela();
+                await this.atualizarDashboard();
+                await this.criarGraficos();
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+            }
+        }
+
+        renderizarTabela() {
+            const tbody = document.querySelector('#tabelaProdutos tbody');
+            tbody.innerHTML = '';
+
+            if (this.produtos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="no-data">Nenhum produto cadastrado</td></tr>';
+                this.renderizarMobile();
+                return;
             }
 
-            expandirDetalhes(id, button) {
-                const produto = this.produtos.find(p => p.id === id);
-                if (!produto) return;
+            this.produtos.forEach((produto) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${produto.nome}</td>
+                    <td>${produto.categoria}</td>
+                    <td>${produto.quantidadeEstimada}</td>
+                    <td>R$ ${produto.precoCusto.toFixed(2)}</td>
+                    <td>R$ ${(produto.custoFixoPorUnidade || 0).toFixed(2)}</td>
+                    <td>R$ ${(produto.custoTotalBase || 0).toFixed(2)}</td>
+                    <td>R$ ${(produto.precoIdeal || 0).toFixed(2)}</td>
+                    <td>R$ ${(produto.margemBruta || 0).toFixed(2)}</td>
+                    <td>R$ ${(produto.lucroBrutoPorUnidade || 0).toFixed(2)}</td>
+                    <td>
+                        <button class="btn-expand" onclick="app.expandirDetalhes(${produto.id}, this)">Detalhes</button>
+                        <button class="btn-delete" onclick="app.deletarProduto(${produto.id})">Deletar</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
 
+            this.renderizarMobile();
+        }
+
+        renderizarMobile() {
+            const mobileContainer = document.querySelector('.mobile-products');
+            mobileContainer.innerHTML = '';
+
+            if (this.produtos.length === 0) {
+                mobileContainer.innerHTML = '<div class="no-data">Nenhum produto cadastrado</div>';
+                return;
+            }
+
+            this.produtos.forEach((produto) => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-header">
+                        <div class="product-name">${produto.nome}</div>
+                        <div class="product-category">${produto.categoria}</div>
+                    </div>
+                    <div class="product-details">
+                        <div class="detail-card">
+                            <div class="detail-label">Qtd Est.</div>
+                            <div class="detail-value">${produto.quantidadeEstimada}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Preço Venda</div>
+                            <div class="detail-value">R$ ${(produto.precoIdeal || 0).toFixed(2)}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Lucro/Un</div>
+                            <div class="detail-value">R$ ${(produto.lucroBrutoPorUnidade || 0).toFixed(2)}</div>
+                        </div>
+                        <div class="detail-card">
+                            <div class="detail-label">Margem</div>
+                            <div class="detail-value">R$ ${(produto.margemBruta || 0).toFixed(2)}</div>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-expand" onclick="app.expandirDetalhes(${produto.id}, this)">Detalhes</button>
+                        <button class="btn-delete" onclick="app.deletarProduto(${produto.id})">Deletar</button>
+                    </div>
+                `;
+                mobileContainer.appendChild(card);
+            });
+        }
+
+        expandirDetalhes(id, button) {
+            const produto = this.produtos.find(p => p.id === id);
+            if (!produto) return;
+
+            // Para desktop - mantém a funcionalidade original
+            if (window.innerWidth > 768) {
                 const detalhesRow = document.querySelector(`[data-details-id="${id}"]`);
-                
+
                 if (detalhesRow) {
                     detalhesRow.remove();
                     button.textContent = 'Detalhes';
@@ -785,260 +994,273 @@
                 `;
                 tr.after(newRow);
                 button.textContent = 'Recolher';
-            }
+            } else {
+                // Para mobile - usa alerta com informações resumidas
+                const detalhes = `
+Quantidade Estimada: ${produto.quantidadeEstimada}
+Preço de Compra: R$ ${produto.precoCusto.toFixed(2)}
+Preço de Venda: R$ ${(produto.precoIdeal || 0).toFixed(2)}
+Lucro por Unidade: R$ ${(produto.lucroBrutoPorUnidade || 0).toFixed(2)}
+Lucro Mensal: R$ ${(produto.lucroMensal || 0).toFixed(2)}
+Margem: ${(produto.margemDesejada * 100).toFixed(2)}%
+                `.trim();
 
-            async atualizarDashboard() {
-                try {
-                    const resumo = await this.apiService.obterResumo();
-                    
-                    if (!resumo || resumo.status === 'Nenhum produto cadastrado') {
-                        document.getElementById('dashboardContent').style.display = 'none';
-                        document.getElementById('dashboardVazio').style.display = 'block';
-                        return;
-                    }
-
-                    document.getElementById('dashboardContent').style.display = 'block';
-                    document.getElementById('dashboardVazio').style.display = 'none';
-
-                    document.getElementById('dashCustoFixo').textContent = `R$ ${resumo.custoFixoMensal.toFixed(2)}`;
-                    document.getElementById('dashReceita').textContent = `R$ ${resumo.receitaTotalMensal.toFixed(2)}`;
-                    document.getElementById('dashCustoCompra').textContent = `R$ ${resumo.custoTotalCompra.toFixed(2)}`;
-                    document.getElementById('dashMargemTotal').textContent = `R$ ${resumo.margemContribuicaoTotal.toFixed(2)}`;
-                    document.getElementById('dashVendas').textContent = resumo.vendaEstimada;
-                    document.getElementById('dashMargemMedia').textContent = `${resumo.margemMediaPercentual.toFixed(2)}%`;
-                    document.getElementById('dashLucro').textContent = `R$ ${resumo.lucrobrutoTotal.toFixed(2)}`;
-                    document.getElementById('dashPontoEquilibrio').textContent = `R$ ${resumo.pontoEquilibrioReais.toFixed(2)}`;
-                    document.getElementById('dashROI').textContent = `${resumo.roiGeral.toFixed(2)}%`;
-                    
-                    const statusElement = document.getElementById('dashStatus');
-                    statusElement.textContent = resumo.status;
-                } catch (error) {
-                    console.error('Erro ao atualizar dashboard:', error);
-                }
-            }
-
-            async criarGraficos() {
-                if (this.produtos.length === 0) return;
-
-                const resumo = await this.apiService.obterResumo();
-                if (!resumo) return;
-                
-                this.criarGraficoReceitaLucro(resumo);
-                this.criarGraficoTopProdutos();
-                this.criarGraficoCategorias();
-                this.atualizarResumoFinanceiro(resumo);
-            }
-
-            criarGraficoReceitaLucro(resumo) {
-                const ctx = document.getElementById('chartReceitaLucro');
-                if (!ctx) return;
-
-                if (this.charts.receitaLucro) {
-                    this.charts.receitaLucro.destroy();
-                }
-
-                this.charts.receitaLucro = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Receita Total', 'Lucro Bruto', 'Custo Total'],
-                        datasets: [{
-                            label: 'Valores (R$)',
-                            data: [
-                                resumo.receitaTotalMensal.toFixed(2),
-                                resumo.lucrobrutoTotal.toFixed(2),
-                                resumo.custoTotalCompra.toFixed(2)
-                            ],
-                            backgroundColor: [
-                                '#3498db',
-                                '#2ecc71',
-                                '#e74c3c'
-                            ],
-                            borderColor: [
-                                '#2980b9',
-                                '#27ae60',
-                                '#c0392b'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            }
-
-            criarGraficoTopProdutos() {
-                const ctx = document.getElementById('chartTopProdutos');
-                if (!ctx) return;
-
-                const top5 = [...this.produtos]
-                    .sort((a, b) => (b.lucroMensal || 0) - (a.lucroMensal || 0))
-                    .slice(0, 5);
-
-                if (this.charts.topProdutos) {
-                    this.charts.topProdutos.destroy();
-                }
-
-                this.charts.topProdutos = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: top5.map(p => p.nome),
-                        datasets: [{
-                            label: 'Lucro Mensal (R$)',
-                            data: top5.map(p => (p.lucroMensal || 0).toFixed(2)),
-                            backgroundColor: [
-                                '#3498db',
-                                '#2ecc71',
-                                '#f39c12',
-                                '#e74c3c',
-                                '#9b59b6'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            }
-
-            criarGraficoCategorias() {
-                const ctx = document.getElementById('chartCategorias');
-                if (!ctx) return;
-
-                const categorias = {};
-                this.produtos.forEach(p => {
-                    if (!categorias[p.categoria]) {
-                        categorias[p.categoria] = 0;
-                    }
-                    categorias[p.categoria] += (p.lucroMensal || 0);
-                });
-
-                if (this.charts.categorias) {
-                    this.charts.categorias.destroy();
-                }
-
-                this.charts.categorias = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: Object.keys(categorias),
-                        datasets: [{
-                            data: Object.values(categorias).map(v => v.toFixed(2)),
-                            backgroundColor: [
-                                '#3498db',
-                                '#2ecc71',
-                                '#f39c12',
-                                '#e74c3c',
-                                '#9b59b6',
-                                '#1abc9c'
-                            ]
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false
-                    }
-                });
-            }
-
-            atualizarResumoFinanceiro(resumo) {
-                const div = document.getElementById('resumoFinanceiro');
-                if (!div) return;
-
-                div.innerHTML = `
-                    <div class="resumo-item receita">
-                        <strong>Receita Total:</strong><br>
-                        R$ ${resumo.receitaTotalMensal.toFixed(2)}
-                    </div>
-                    <div class="resumo-item custo">
-                        <strong>Custo Total:</strong><br>
-                        R$ ${resumo.custoTotalCompra.toFixed(2)}
-                    </div>
-                    <div class="resumo-item lucro">
-                        <strong>Lucro Bruto:</strong><br>
-                        R$ ${resumo.lucrobrutoTotal.toFixed(2)}
-                    </div>
-                    <div class="resumo-item roi">
-                        <strong>ROI:</strong><br>
-                        ${resumo.roiGeral.toFixed(2)}%
-                    </div>
-                `;
-            }
-
-            async exportarCSV() {
-                try {
-                    const csv = await this.apiService.exportarCSV();
-                    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `relatorio_${new Date().toISOString().split('T')[0]}.csv`;
-                    link.click();
-                    this.mostrarAlerta('✅ CSV exportado com sucesso!', 'success');
-                } catch (error) {
-                    this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
-                }
-            }
-
-            async exportarTXT() {
-                try {
-                    const txt = await this.apiService.exportarTXT();
-                    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `relatorio_${new Date().toISOString().split('T')[0]}.txt`;
-                    link.click();
-                    this.mostrarAlerta('✅ Relatório exportado com sucesso!', 'success');
-                } catch (error) {
-                    this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
-                }
-            }
-
-            async deletarProduto(id) {
-                if (!confirm('Tem certeza que deseja deletar este produto?')) return;
-
-                try {
-                    await this.apiService.deletar(id);
-                    await this.carregarProdutos();
-                    this.mostrarAlerta('✅ Produto deletado com sucesso!', 'success');
-                } catch (error) {
-                    this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
-                }
-            }
-
-            mostrarAlerta(mensagem, tipo) {
-                const alert = document.getElementById('alert');
-                alert.textContent = mensagem;
-                alert.className = `alert ${tipo}`;
-                alert.style.display = 'block';
-
-                setTimeout(() => {
-                    alert.style.display = 'none';
-                }, 3000);
-            }
-
-            mudarAba(abaName) {
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-
-                document.getElementById(abaName).classList.add('active');
-                event.target.classList.add('active');
+                alert(detalhes);
             }
         }
 
-        let app;
-        document.addEventListener('DOMContentLoaded', () => {
-            app = new App();
-        });
-    </script>
+        async atualizarDashboard() {
+            try {
+                const resumo = await this.apiService.obterResumo();
+
+                if (!resumo || resumo.status === 'Nenhum produto cadastrado') {
+                    document.getElementById('dashboardContent').style.display = 'none';
+                    document.getElementById('dashboardVazio').style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('dashboardContent').style.display = 'block';
+                document.getElementById('dashboardVazio').style.display = 'none';
+
+                document.getElementById('dashCustoFixo').textContent = `R$ ${resumo.custoFixoMensal.toFixed(2)}`;
+                document.getElementById('dashReceita').textContent = `R$ ${resumo.receitaTotalMensal.toFixed(2)}`;
+                document.getElementById('dashCustoCompra').textContent = `R$ ${resumo.custoTotalCompra.toFixed(2)}`;
+                document.getElementById('dashMargemTotal').textContent = `R$ ${resumo.margemContribuicaoTotal.toFixed(2)}`;
+                document.getElementById('dashVendas').textContent = resumo.vendaEstimada;
+                document.getElementById('dashMargemMedia').textContent = `${resumo.margemMediaPercentual.toFixed(2)}%`;
+                document.getElementById('dashLucro').textContent = `R$ ${resumo.lucrobrutoTotal.toFixed(2)}`;
+                document.getElementById('dashPontoEquilibrio').textContent = `R$ ${resumo.pontoEquilibrioReais.toFixed(2)}`;
+                document.getElementById('dashROI').textContent = `${resumo.roiGeral.toFixed(2)}%`;
+
+                const statusElement = document.getElementById('dashStatus');
+                statusElement.textContent = resumo.status;
+            } catch (error) {
+                console.error('Erro ao atualizar dashboard:', error);
+            }
+        }
+
+        async criarGraficos() {
+            if (this.produtos.length === 0) return;
+
+            const resumo = await this.apiService.obterResumo();
+            if (!resumo) return;
+
+            this.criarGraficoReceitaLucro(resumo);
+            this.criarGraficoTopProdutos();
+            this.criarGraficoCategorias();
+            this.atualizarResumoFinanceiro(resumo);
+        }
+
+        criarGraficoReceitaLucro(resumo) {
+            const ctx = document.getElementById('chartReceitaLucro');
+            if (!ctx) return;
+
+            if (this.charts.receitaLucro) {
+                this.charts.receitaLucro.destroy();
+            }
+
+            this.charts.receitaLucro = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Receita Total', 'Lucro Bruto', 'Custo Total'],
+                    datasets: [{
+                        label: 'Valores (R$)',
+                        data: [
+                            resumo.receitaTotalMensal.toFixed(2),
+                            resumo.lucrobrutoTotal.toFixed(2),
+                            resumo.custoTotalCompra.toFixed(2)
+                        ],
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#e74c3c'
+                        ],
+                        borderColor: [
+                            '#2980b9',
+                            '#27ae60',
+                            '#c0392b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        criarGraficoTopProdutos() {
+            const ctx = document.getElementById('chartTopProdutos');
+            if (!ctx) return;
+
+            const top5 = [...this.produtos]
+                .sort((a, b) => (b.lucroMensal || 0) - (a.lucroMensal || 0))
+                .slice(0, 5);
+
+            if (this.charts.topProdutos) {
+                this.charts.topProdutos.destroy();
+            }
+
+            this.charts.topProdutos = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: top5.map(p => p.nome),
+                    datasets: [{
+                        label: 'Lucro Mensal (R$)',
+                        data: top5.map(p => (p.lucroMensal || 0).toFixed(2)),
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#f39c12',
+                            '#e74c3c',
+                            '#9b59b6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        criarGraficoCategorias() {
+            const ctx = document.getElementById('chartCategorias');
+            if (!ctx) return;
+
+            const categorias = {};
+            this.produtos.forEach(p => {
+                if (!categorias[p.categoria]) {
+                    categorias[p.categoria] = 0;
+                }
+                categorias[p.categoria] += (p.lucroMensal || 0);
+            });
+
+            if (this.charts.categorias) {
+                this.charts.categorias.destroy();
+            }
+
+            this.charts.categorias = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categorias),
+                    datasets: [{
+                        data: Object.values(categorias).map(v => v.toFixed(2)),
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#f39c12',
+                            '#e74c3c',
+                            '#9b59b6',
+                            '#1abc9c'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        atualizarResumoFinanceiro(resumo) {
+            const div = document.getElementById('resumoFinanceiro');
+            if (!div) return;
+
+            div.innerHTML = `
+                <div class="resumo-item receita">
+                    <strong>Receita Total:</strong><br>
+                    R$ ${resumo.receitaTotalMensal.toFixed(2)}
+                </div>
+                <div class="resumo-item custo">
+                    <strong>Custo Total:</strong><br>
+                    R$ ${resumo.custoTotalCompra.toFixed(2)}
+                </div>
+                <div class="resumo-item lucro">
+                    <strong>Lucro Bruto:</strong><br>
+                    R$ ${resumo.lucrobrutoTotal.toFixed(2)}
+                </div>
+                <div class="resumo-item roi">
+                    <strong>ROI:</strong><br>
+                    ${resumo.roiGeral.toFixed(2)}%
+                </div>
+            `;
+        }
+
+        async exportarCSV() {
+            try {
+                const csv = await this.apiService.exportarCSV();
+                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `relatorio_${new Date().toISOString().split('T')[0]}.csv`;
+                link.click();
+                this.mostrarAlerta('✅ CSV exportado com sucesso!', 'success');
+            } catch (error) {
+                this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async exportarTXT() {
+            try {
+                const txt = await this.apiService.exportarTXT();
+                const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `relatorio_${new Date().toISOString().split('T')[0]}.txt`;
+                link.click();
+                this.mostrarAlerta('✅ Relatório exportado com sucesso!', 'success');
+            } catch (error) {
+                this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        async deletarProduto(id) {
+            if (!confirm('Tem certeza que deseja deletar este produto?')) return;
+
+            try {
+                await this.apiService.deletar(id);
+                await this.carregarProdutos();
+                this.mostrarAlerta('✅ Produto deletado com sucesso!', 'success');
+            } catch (error) {
+                this.mostrarAlerta(`❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        mostrarAlerta(mensagem, tipo) {
+            const alert = document.getElementById('alert');
+            alert.textContent = mensagem;
+            alert.className = `alert ${tipo}`;
+            alert.style.display = 'block';
+
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        mudarAba(abaName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(abaName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    }
+
+    let app;
+    document.addEventListener('DOMContentLoaded', () => {
+        app = new App();
+    });
+</script>
 </body>
 </html>

@@ -36,13 +36,20 @@ Sistema completo de precificação que ajuda empreendedores e pequenas empresas 
 - **Version Control**: GitHub
 
 ## 📦 Estrutura do Projeto
-projeto-precificacao/
-├── .github/
-│ └── workflows/ # GitHub Actions
-├── src/ # Código fonte Spring Boot
-├── frontend/ # Arquivos estáticos (HTML, CSS, JS)
-├── README.md # Este arquivo
-└── pom.xml # Dependências Maven
+
+### 🏗️ Arquitetura Simplificada
+
+**Backend (Spring Boot)**
+- `src/main/java/` - Lógica da aplicação e APIs REST
+- `src/main/resources/` - Configurações e propriedades
+
+**Frontend (Vanilla JS)**
+- `frontend/index.html` - Aplicação completa (HTML, CSS, JS)
+- Design responsivo e componentes reutilizáveis
+
+**DevOps & CI/CD**
+- `.github/workflows/` - Automações e integrações
+- `pom.xml` - Gerenciamento de dependências Java
 
 
 ## 🚀 Como Executar
